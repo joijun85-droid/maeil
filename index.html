@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>매일 말씀</title>
+
+<!-- 홈 화면 앱 설정 -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="매일 말씀">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#f5efe3">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="manifest" href="manifest.json">
+
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@700&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;height:100%;background:#f5efe3;overflow:hidden}
+  iframe{position:fixed;inset:0;width:100%;height:100%;border:0;background:#f5efe3}
+  /* 시작 화면 */
+  #splash{position:fixed;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    background:linear-gradient(180deg,#fbf3e6,#f5e2c8);transition:opacity .5s ease}
+  #splash.out{opacity:0;pointer-events:none}
+  #splash img{width:112px;height:112px;border-radius:26px;box-shadow:0 12px 30px rgba(214,104,40,.3);animation:float 2.4s ease-in-out infinite}
+  #splash h1{font-family:'Gowun Batang',serif;font-size:30px;color:#2a2730;margin:22px 0 6px}
+  #splash p{font-family:'Gowun Batang',serif;font-size:15px;color:#8a8275;margin:0}
+  #splash .dots{margin-top:30px;display:flex;gap:7px}
+  #splash .dots i{width:7px;height:7px;border-radius:50%;background:#d97a2b;opacity:.3;animation:dot 1.2s infinite}
+  #splash .dots i:nth-child(2){animation-delay:.2s} #splash .dots i:nth-child(3){animation-delay:.4s}
+  @keyframes float{50%{transform:translateY(-6px)}}
+  @keyframes dot{50%{opacity:1}}
+  @media (prefers-color-scheme:dark){
+    html,body,iframe{background:#16151a}
+    #splash{background:linear-gradient(180deg,#1d1b22,#16151a)}
+    #splash h1{color:#efe9dd}
+  }
+</style>
+</head>
+<body>
+  <div id="splash">
+    <img src="icon-512.png" alt="">
+    <h1>매일 말씀</h1>
+    <p id="verse">주의 말씀은 내 발에 등이요 내 길에 빛이니이다</p>
+    <div class="dots"><i></i><i></i><i></i></div>
+  </div>
+
+  <!-- ↓↓↓ 여기에 앱스 스크립트 웹 앱 주소(…/exec)를 넣어 ↓↓↓ -->
+  <iframe id="app" allow="clipboard-write" title="매일 말씀"></iframe>
+
+<script>
+  const GAS_URL = 'https://script.google.com/macros/s/AKfycbwc3KAaVuQau4UjBZXhtba6P6HYnc9Q78vGxcV94ilanMKkMslbML-wFTLA8GsQpHu6/exec';
+
+  const verses = [
+    '주의 말씀은 내 발에 등이요 내 길에 빛이니이다 · 시 119:105',
+    '말씀하옵소서 주의 종이 듣겠나이다 · 삼상 3:10',
+    '안식일을 기억하여 거룩하게 지키라 · 출 20:8',
+    '여호와를 앙망하는 자는 새 힘을 얻으리니 · 사 40:31',
+    '쉬지 말고 기도하라 · 살전 5:17'
+  ];
+  document.getElementById('verse').textContent = verses[new Date().getDate() % verses.length];
+
+  const start = Date.now();
+  const frame = document.getElementById('app');
+  frame.addEventListener('load', () => {
+    const wait = Math.max(0, 1300 - (Date.now() - start));   // 시작 화면은 최소 1.3초
+    setTimeout(() => document.getElementById('splash').classList.add('out'), wait);
+  });
+  frame.src = GAS_URL;
+</script>
+</body>
+</html>
